@@ -1,0 +1,74 @@
+you say database store hash i use h2 database which i use inmemory or file in my wallet project
+
+
+In your TechPulse Wallet System, you are using a file-based H2 database, not an in-memory database.
+
+
+Your application.yml configuration is:
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/walletdb
+    username: sa
+    password:
+
+
+Difference between the two
+Feature	In-memory H2	Your file-based H2
+JDBC URL	jdbc:h2:mem:walletdb	jdbc:h2:file:./data/walletdb
+Data storage	RAM	Disk
+After application stops	Data usually disappears	Data remains saved
+After restart	Database starts fresh	Existing data can be loaded again
+
+
+Where is your wallet data stored?
+If the interviewer asks, “Which database are you using, and is it in-memory or file-based?”
+
+
+“I am using the H2 database in file-based mode. I configured jdbc:h2:file:./data/walletdb in my application.yml. This allows wallet users, balances, and transaction records to persist even after the application restarts.”
+
+Remember: BCrypt stores password hashes in your database; your file-based H2 database persists those hashes along with the other application data.
+
+---------------------
+
+4. What should you say in your TechPulse interview?
+A good fresher-level answer is:
+
+“Spring Boot supports application.properties and application.yml for external configuration. Both can configure properties such as the server port, database connection, and JPA settings. Properties uses key-value pairs, whereas YAML uses indentation and a hierarchical structure. In my Wallet System, I use application.yml to configure the H2 file-based database and other Spring Boot settings.”
+
+Quick memory trick:
+- .properties → key=value
+- .yml → indentation and hierarchy
+- .xml → opening and closing tags
+
+-----------------------------------------------------
+1. Why did you choose H2?
+
+
+1. Why did you choose H2?
+Imagine you are building a wallet application that handles user registration, login, wallet balances, and money transfers.
+
+You need a database to store all this information. H2 is convenient because you can start developing without installing and configuring a separate database server.
+
+
+H2 Database — Your project
+- Lightweight and easy to configure.
+- Supports in-memory and file-based storage.
+- Useful for automated tests and quick development.
+- Can run without a separate database server.
+
+----------------------------------------------
+
+3. Why not use MySQL or PostgreSQL from the beginning?
+Factor	H2	MySQL / PostgreSQL
+Initial setup	Very easy	Requires server/configuration
+Development	Fast and convenient	More production-like
+Automated tests	Excellent for many tests	Excellent for integration tests
+Production wallet system	Possible in some cases, but less common	Generally more suitable
+Real database concurrency testing	Useful, but not a complete substitute	Recommended for the target database
+
+---------------------------------
+“I chose H2 because it is lightweight, easy to configure, and suitable for rapid development and automated testing.
+               without setting up a separate database server.
+
+-------------------------------------------------------------

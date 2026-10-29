@@ -1,0 +1,160 @@
+Wallet System — Project Features
+1. Main application features
+
+
+1. User Registration and Login
+
+Users can register and log in securely. Passwords are encrypted using BCrypt, and JWT tokens are used for authentication.
+
+BCrypt -बी-क्रिप्ट
+BCrypt — Password Security
+
+BCrypt protects the password.
+Converts a password into a secure hash.
+---------------------------------------------
+JWT — Login Authentication
+- Creates a token after successful login.
+
+
+2. Example from your Wallet System
+Suppose you register with:
+- Email: shubham@gmail.com
+- Password: Shubham@123
+Step 1: Registration
+Your password goes through BCrypt.
+Original password
+
+Shubham@123
+
+BCrypt hash (illustrative)
+
+"$2a$10$..." 
+
+The database stores the hash, not the original password.
+
+Important: BCrypt hashing is one-way; you verify a password against the hash rather than decrypting it.
+
+Step 2: Login
+You enter your email and password again.
+1. The backend fetches your stored BCrypt hash.
+2. BCrypt checks whether your entered password matches that hash.
+3. If it matches, login succeeds.
+   
+   Step 3: JWT token generation
+   After successful login, the backend generates a token, for example:
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOi...
+
+This is a shortened illustrative token, not a real token.
+
+The client sends the token when calling a protected API, such as checking the wallet balance.
+
+---------------------------
+
+Feature	BCrypt	JWT
+Main purpose	Protect passwords	Authenticate API requests
+Used when	Register and log in	After login
+Stores or carries	Password hash in DB	Claims and signature in token
+Decryptable?	No, it's a one-way hash	Usually decodable, but not encrypted by default
+Example in your project	BCryptPasswordEncoder	JwtService, JwtAuthenticationFilter
+
+---------------------------------------------------------------------------------------------------
+
+2. Automatic Wallet Creation
+
+When a user registers, the application automatically creates a wallet linked to that user. Each user has one wallet.
+
+
+If the interviewer asks, “How did you implement automatic wallet creation?”, you can say:
+
+“When a user registers, the AuthService first saves the user with a BCrypt-hashed password. After the user is saved, the service creates a wallet with an initial balance of zero and links it to the saved user. I use a one-to-one relationship and a unique constraint on the user ID to ensure that each user has only one wallet. The registration and wallet creation operations are transactional so that they succeed or fail together.”
+
+
+-----------------------------------
+1. What is an enum?
+An enum is a special Java type used to define a fixed set of constants.
+
+public enum Role {
+    USER,
+    ADMIN
+}
+
+3. How do you use it in your Wallet System?
+For example, in your User entity:
+
+@Enumerated(EnumType.STRING)
+private Role role;
+
+Here is what each part means:
+- Role is your enum type.
+- role stores the user's assigned role.
+- @Enumerated(EnumType.STRING) tells JPA to store the enum name, such as USER or ADMIN, in the database.
+
+
+Interview answer
+“I use an enum instead of a normal class or String because the roles in my Wallet System have a fixed set of values, such as USER and ADMIN. An enum provides type safety, prevents invalid role values at compile time, and makes the code easier to maintain. I use @Enumerated(EnumType.STRING) to store the role name in the database.”
+
+-------------------------------
+
+1. What can we store using enum?
+Here are examples related to your wallet project.
+Enum name	Possible values	Purpose
+Role	USER, ADMIN	Identifies the user's role
+TransactionType	ADD, TRANSFER	Identifies the transaction type
+TransactionStatus	SUCCESS, FAILED, PENDING	Tracks the transaction status
+WalletStatus	ACTIVE, BLOCKED	Tracks the wallet status
+PaymentMethod	UPI, CARD, BANK_TRANSFER	Identifies the payment method
+
+----------------------
+
+2. How do we create an enum?
+For example, your TransactionStatus.java:
+
+public enum TransactionStatus {
+    SUCCESS,
+    FAILED,
+    PENDING
+}
+
+Now use it in your transaction entity:
+@Enumerated(EnumType.STRING)
+private TransactionStatus status;
+
+eg:
+transaction.setStatus(TransactionStatus.SUCCESS);
+
+The database can store the value as:
+SUCCESS
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Check Wallet Balance
+
+Authenticated users can check their own wallet balance without accessing another user's private wallet information.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. Add Money
+
+Users can add money to their wallets through the assignment's wallet API.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Transaction History
+
+Users can view their transaction records, with pagination to retrieve transactions in manageable pages.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7.Admin Features
+
+Administrators have role-based access to the wallet and transaction views provided by the application.
+
+1. Difference between Idempotency and Concurrency
+
+Point	                                Idempotency	                                                                     Concurrency Control
+Meaning	                       Prevents the same operation from being processed more than once.	               Protects data when multiple operations happen at the same time.
+Main problem	                      Duplicate requests	                                                               Simultaneous requests
+Example	                          User clicks Pay twice because the app freezes.	                        Two payments try to use the same wallet balance simultaneously.
+Common technique	              Idempotency key	                                                      Optimistic locking, pessimistic locking, database transactions
+Goal	                                Avoid duplicate processing	                                                Maintain correct and consistent balance
+
+----------------------------------------------------------------------------------

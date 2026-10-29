@@ -1,0 +1,113 @@
+Step 4: Run your tests
+In Eclipse:
+1. Right-click the project wallet.
+2. Select Run As → Maven build…
+3. Set Goals to clean verify.
+4. Click Run.
+Check for:
+
+BUILD SUCCESS
+
+Then reopen target/site/jacoco/index.html and check the exception package coverage.
+
+
+Step 2: Check your project
+In Eclipse, right-click your wallet project and look for:
+- Run As → Maven build…
+- Maven → Update Project…
+
+Step 3 — Continue
+Once .github is visible:
+- Right-click .github → New → Folder
+- Enter workflows
+- Right-click workflows → New → File
+- Enter build.yml
+
+
+wallet/
+├── .github/
+│   └── workflows/
+│       └── build.yml
+├── pom.xml
+├── README.md
+└── src/
+
+
+
+Organization name: wallet system
+Organization key: wallet-system
+Project key: wallet-system
+
+
+<properties>
+    <sonar.organization>wallet-system</sonar.organization>
+</properties>
+
+
+
+Test	Actual response	Result
+page=-1&size=10	"Page number cannot be negative"	✅ Pass
+page=0&size=101	"Page size must be between 1 and 100"	✅ Pass
+
+Save the file.
+
+
+
+Right-click JwtAuthenticationFilterTest.java.
+
+Choose Run As → JUnit Test.
+
+Confirm that all 9 tests pass.
+
+
+------------------------------------
+
+pagination ,filtering and sorting
+
+Base query-select * from traction  //without pagination
+
+suppose -databse -10 million transaction record
+
+api deishn- traction history fetch
+
+yek sath sare traction fetch krneka api bnaya
+problem:
+DB will be slow to fech data all-slow
+data fech kr rhe ho tab aapko application level pe bhi aapko store krna phega -so memory issue aayegi kivi application ki memeory itni jada nhi hoti -memeory problem
+ap-response-client ko sent kroge --so network layer mai itna sara data bhejna next to impissble hai-network
+
+iski three problem ki vajhse ham yek sath data fech nhi krte
+
+-----------------------------
+we use pagination
+means data ko pages mai divide kro
+page ka size hoga-utna hi data usme aayega
+andyek yek page fetch krke data aalo
+
+-------------
+add pahination
+add two filed
+page number
+     size
+
+eg page num-5
+     size 10 number of element leke  ayega
+
+select * from transaction
+offset 30 limit 10;
+
+phle 30 record skip themn iske bad vale 10 record
+
+-------------------------------
+filtering:
+tratraction amount grater tham 100 vhi fetch krn hai //filering on the basic of amount
+
+select * from transaction
+offset 30 limit 10  where amount>100;
+
+--------------------------------------------
+recent traction dekni hai then date ke basic pe sort kro
+select * from transaction
+offset 30 limit 10  where amount>100;
+order by date desc
+---------------------------------------

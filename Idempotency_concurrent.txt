@@ -1,0 +1,91 @@
+Idempotency prevents duplicate operations; concurrency control prevents incorrect results when operations execute simultaneously.
+
+2. Real-world scenario: Idempotency
+Imagine your wallet balance is ₹1,000, and you want to add ₹500.
+
+
+Step 1: First request
+
+You send ₹500 add-money request with idempotency key ADD101.
+₹1,500
+Balance after successful processing
+
+
+Step 2:Payment Processing Request times out
+The app doesn't receive a response, so you retry using the same key ADD101.
+
+
+Step 3: Idempotency check
+
+The backend recognizes the key and returns the previously recorded result instead of adding another ₹500.
+₹1,500
+Balance remains unchanged
+
+---------------------
+How it works internally:
+1. The client sends an idempotency key with the request.
+2. The backend checks whether the key already exists.
+3. If it's new, the backend processes the operation and stores its result.
+4. If it's already processed, the backend returns the stored result without repeating the operation.
+Important: the key must be stored and checked safely, with a database uniqueness constraint or equivalent protection against simultaneous duplicate requests. A different key may represent a new operation.
+
+------------------------------------------
+Real-world scenario: Concurrency Control
+Suppose your wallet balance is ₹1,000. Two different payments are requested almost simultaneously.
+
+Initial wallet balance
+₹1,000
+
+Payment A        payment
+₹800              ₹800 
+Shopping         money transfer 
+
+Both requests arrive at nearly the same time.
+Without concurrency control
+
+Both requests might read ₹1,000 before either updates the database. Each thinks there is enough money, so both might succeed incorrectly.
+
+Incorrect outcome
+The application may process ₹1,500 of payments from a wallet containing only ₹1,000.
+
+With concurrency control
+
+Payment A succeeds
+Balance becomes ₹200.
+
+Payment B fails
+Insufficient balance; ₹700 cannot be deducted.
+
+--------------------------------------------------------------------------------
+
+1. What is Idempotency?
+Interview answer:
+
+Idempotency means if we send the same request multiple times with the same idempotency key, the operation is processed only once.
+
+For example, in my Wallet System, if a user adds ₹500 and the app times out, the user may retry the request. Using the same idempotency key, the system prevents adding ₹500 again.
+
+In simple words: It prevents duplicate operations.
+
+----------------------------------------------------------
+2. What is Concurrency Control?
+Interview answer:
+
+Concurrency control means managing multiple requests that access or update the same data at the same time.
+
+For example, in my Wallet System, if my wallet has ₹1,000 and two requests try to transfer ₹800 and ₹700 simultaneously, concurrency control ensures that both requests cannot spend the same balance incorrectly.
+
+We can use optimistic locking with the @Version annotation in JPA to detect conflicting updates.
+
+In simple words: It maintains correct data when multiple requests happen simultaneously.
+----------------------------------------------------------------------------------------
+3. Difference between them
+Idempotency	Concurrency Control
+Prevents duplicate operations.	Prevents incorrect simultaneous updates.
+Uses an idempotency key.	Can use locking and database transactions.
+Handles repeated requests.	Handles concurrent requests.
+
+----------------------------------------------------------------------------
+Remember this line for your interview:
+
+“ In my Wallet System, idempotency prevents duplicate transactions when a request is retried, while concurrency control protects wallet balances when multiple requests execute simultaneously.”

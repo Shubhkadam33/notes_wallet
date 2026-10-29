@@ -1,0 +1,169 @@
+JUnit — Automated Testing
+Learn first
+Learn how to test your Java code and verify that your wallet features work correctly.
+
+Example: Check whether transferring ₹500 deducts the correct amount.
+
+
+
+2
+
+JaCoCo — Code Coverage
+
+Learn how much of your code is executed by your tests.
+
+Example: Find out whether your wallet transfer service has been tested adequately.
+
+
+
+3
+
+SonarQube — Code Quality
+
+Learn how to identify bugs, security issues, and code-quality problems.
+
+Example: Detect potentially unsafe code in your wallet application.
+
+
+
+4
+
+GitHub Actions — CI/CD
+
+Learn how to automate the testing, coverage reporting, and code-quality analysis whenever you push code to GitHub.
+
+Example: Automatically run Maven tests and SonarQube analysis after a push.
+
+--------------------------------------------------------------------------------
+
+JUnit: Test your code
+
+JaCoCo: Measure test coverage
+
+SonarQube: Analyze code quality
+
+GitHub Actions: Automate the workflow
+
+---------------------------
+
+Lesson 1: What is JUnit?
+Simple meaning: JUnit is a Java testing framework used to check whether our code works as expected.
+
+For example, in your Wallet System, if a user transfers ₹500 from a balance of ₹1,000, the remaining balance should be ₹500. We can write a JUnit test to verify this automatically.
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class WalletTest {
+
+    @Test
+    void testBalanceAfterTransfer() {
+        int balance = 1000;
+        int transferAmount = 500;
+
+        int remainingBalance = balance - transferAmount;
+
+        assertEquals(500, remainingBalance);
+    }
+}
+
+-------------------------
+
+Understand these three things
+- @Test — tells JUnit that this method is a test. or @Test tells JUnit which method to run as a test.
+- assertEquals(500, remainingBalance) — checks whether the expected value 500 matches the actual result.
+
+
+- If they match, the test passes. Otherwise, it fails.
+
+Remember:
+- @Test → identifies the test method.
+- assertEquals() → checks whether the expected result matches the actual result.
+
+
+------------------------------
+
+Difference between JUnit and Unit Testing
+Unit Testing	JUnit
+A software testing technique.	A Java testing framework.
+Tests a small part of the code, such as a method.	Helps you write and run those tests.
+It is a concept.	It is a tool.
+Can be performed using different testing frameworks.	Commonly used for unit testing Java applications.
+----------------------------
+nterview-ready answer
+“Unit testing is a technique where we test individual units of code independently. JUnit is a Java testing framework that helps us write, execute, and verify these tests.”
+---------------------------------------
+
+Both methods are used in JUnit, but they check different things.
+Method	Purpose	Wallet System example
+assertEquals()	Checks expected value against actual value.	Expected remaining balance is ₹500.
+assertThrows()	Checks whether the expected exception occurs.	A transfer of ₹0 throws IllegalArgumentException.
+
+----------------------------------------------------------------------------
+
+Correct! ✅ Option B is right.
+- assertEquals() checks whether the expected and actual values match.
+- assertThrows() checks whether the code throws the expected exception.
+
+-------------------------------------------------------------------------------------
+
+Step 1: Open your Wallet project
+1. Open Eclipse.
+2. In Project Explorer, find your wallet project.
+3. Expand the project and check whether you have this folder structure:
+wallet
+
+src/main/java
+Your application code, including WalletService
+
+src/test/java
+Your JUnit test classes, such as WalletServiceTest
+
+pom.xml
+Maven configuration and test dependencies
+
+
+If src/test/java doesn't exist, you can create it.
+------------------------------------------------------------------
+
+Step 2: Check your JUnit dependency
+1. Open pom.xml.
+2. Find spring-boot-starter-test.
+For example, your Maven dependencies may contain:
+
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+
+----------------------------
+
+tep 3: Find or create a test class
+Under src/test/java, find your project's package, such as com.techpulse.wallet.
+
+If you don't have a test class yet:
+1. Right-click src/test/java.
+2. Select New → Package and enter com.techpulse.wallet if needed.
+3. Right-click the package → New → Class.
+4. Name it WalletServiceTest.
+----------------------------------
+package com.techpulse.wallet;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class WalletServiceTest {
+
+    @Test
+    void shouldCalculateRemainingBalance() {
+        int balance = 1000;
+        int amount = 500;
+
+        int remainingBalance = balance - amount;
+
+        assertEquals(500, remainingBalance);
+    }
+}
+----------------------------
